@@ -180,32 +180,39 @@
         return false;
     }
 
+    /*
+     * Pixiv 的 CSS module class 会随版本变化，不能用 class 定位字数。
+     * 直接识别卡片中的“数字 + 单位”语义文本，避免持续维护 class 名。
+     */
+    const textLengthPattern = /^([\d\s,，]+)\s*(?:字|文字|character\(s\))$/iu;
+
+    function parseTextLength(value) {
+        const match = String(value || '').normalize('NFKC').trim().match(textLengthPattern);
+        if (!match) return null;
+
+        const length = Number(match[1].replace(/[\s,，]/g, ''));
+        return Number.isSafeInteger(length) ? length : null;
+    }
+
     function getTextLength(li) {
-        const divs = [...li.querySelectorAll("div")];
+        const candidates = [];
+        const nodes = li.querySelectorAll('*');
 
-        for (const div of divs) {
-            const spans = div.querySelectorAll(":scope > span");
-            if (spans.length < 2) continue;
+        for (const node of nodes) {
+            if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') continue;
+            if (node.closest('.charcoal-text-ellipsis')) continue;
 
-            const first = spans[0].textContent.trim();
-            const second = spans[1].textContent.trim();
-
-            if (
-                /[\d,.]+万?字/.test(first) &&
-                /分钟/.test(second)
-            ) {
-                const match = first.match(/([\d,.]+)(万)?字/);
-                if (!match) return 0;
-
-                let length = parseFloat(match[1].replace(/,/g, ''));
-                if (match[2]) {
-                    length *= 10000;
-                }
-                return Math.floor(length);
+            const values = [node.textContent, node.getAttribute('aria-label'), node.getAttribute('title')];
+            for (const value of values) {
+                const length = parseTextLength(value);
+                if (length !== null) candidates.push(length);
             }
         }
-        return 0;
+
+        // 同一字段可能同时出现在文本和 aria-label 中，取第一个即可。
+        return candidates.length ? candidates[0] : 0;
     }
+
 
     /* ================= 核心逻辑 ================= */
     function run() {
