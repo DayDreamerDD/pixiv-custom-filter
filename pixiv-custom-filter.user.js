@@ -331,43 +331,34 @@
     }
 
     /* ================= 作者提取 ================= */
-    function getAuthor(li) {
-        const titleEl = li.querySelector('.gtm-novel-searchpage-result-title');
-        const seriesEl = li.querySelector('.gtm-novel-searchpage-result-series-title');
-        const title = titleEl ? titleEl.textContent.trim() : '';
-        const series = seriesEl ? seriesEl.textContent.trim() : '';
-
+    function getAuthor(li, title, series) {
         let authorEl = li.querySelector('.gtm-novel-searchpage-result-user');
         if (authorEl) {
-            let name = (authorEl.textContent || '').trim();
+            const name = (authorEl.textContent || '').trim();
             if (name && name !== title && name !== series && name.length < 30) return name;
         }
 
         authorEl = li.querySelector('a[href^="/users/"]');
         if (authorEl) {
-            let name = (authorEl.textContent || '').trim();
+            const name = (authorEl.textContent || '').trim();
             if (name && name !== title && name !== series && name.length < 30) return name;
         }
 
         const userLinks = li.querySelectorAll('a[href^="/users/"], a.gtm-novel-searchpage-result-user');
-        for (let link of userLinks) {
-            let name = (link.textContent || '').trim();
-            if (name && name.length > 1 && name.length < 25 && name !== title && name !== series) return name;
+        for (const link of userLinks) {
+            const name = (link.textContent || '').trim();
+            if (name && name.length > 1 && name.length < 25 && name !== title && name !== series) {
+                return name;
+            }
         }
         return '';
     }
 
     /* ================= 简介判断 ================= */
-    function hasValidDesc(li) {
-        const titleEl = li.querySelector('.gtm-novel-searchpage-result-title');
-        const seriesEl = li.querySelector('.gtm-novel-searchpage-result-series-title');
-        const title = titleEl ? titleEl.textContent.trim() : '';
-        const seriesTitle = seriesEl ? seriesEl.textContent.trim() : '';
-
+    function hasValidDesc(li, title, seriesTitle) {
         const textBlocks = li.querySelectorAll('.charcoal-text-ellipsis, [data-line-limit]');
-
-        for (let block of textBlocks) {
-            let text = (block.textContent || '').trim();
+        for (const block of textBlocks) {
+            const text = (block.textContent || '').trim();
             if (!text || text === title || text === seriesTitle || text.startsWith(title)) continue;
             if (text.length >= 8) return true;
         }
@@ -389,9 +380,7 @@
     }
 
     function getTextLength(li) {
-        const candidates = [];
         const nodes = li.querySelectorAll('*');
-
         for (const node of nodes) {
             if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') continue;
             if (node.closest('.charcoal-text-ellipsis')) continue;
@@ -399,47 +388,84 @@
             const values = [node.textContent, node.getAttribute('aria-label'), node.getAttribute('title')];
             for (const value of values) {
                 const length = parseTextLength(value);
-                if (length !== null) candidates.push(length);
+                if (length !== null) return length;
             }
         }
-
-        // 同一字段可能同时出现在文本和 aria-label 中，取第一个即可。
-        return candidates.length ? candidates[0] : 0;
+        return 0;
     }
 
+    function getDescription(li, title, series) {
+        const blocks = li.querySelectorAll('.charcoal-text-ellipsis, [data-line-limit]');
+        for (const block of blocks) {
+            const text = (block.textContent || '').trim();
+            if (text.length > 8 && text !== title && text !== series) {
+                return text.replace(/[\s\n\r\u3000]+/g, ' ').trim();
+            }
+        }
+        return '';
+    }
+
+    function readNovelItem(li, checkDescriptionValidity = true) {
+        const title = li.querySelector('.gtm-novel-searchpage-result-title')
+            ?.textContent.trim() || '';
+        const series = li.querySelector('.gtm-novel-searchpage-result-series-title')
+            ?.textContent.trim() || '';
+
+        return {
+            title,
+            series,
+            author: getAuthor(li, title, series),
+            tags: Array.from(li.querySelectorAll(
+                'a[href*="tags/"], a.gtm-novel-searchpage-result-tag'
+            )).map(tag => (tag.textContent || '').trim()),
+            textLength: getTextLength(li),
+            description: getDescription(li, title, series),
+            fullText: li.textContent || '',
+            hasValidDescription: checkDescriptionValidity
+                ? hasValidDesc(li, title, series)
+                : true
+        };
+    }
+
+    function getHideReasons(item, filterConfig) {
+        const reasons = [];
+        for (const [label, text] of [
+            ['系列', item.series],
+            ['标题', item.title],
+            ['简介', item.description]
+        ]) {
+            const matches = contains(text, filterConfig.contentKeywords);
+            if (matches.length) reasons.push(label + matches);
+        }
+
+        if (reasons.length === 0) {
+            const matches = contains(item.fullText, filterConfig.contentKeywords);
+            if (matches.length) reasons.push('全文关键词' + matches);
+        }
+
+        const authorMatches = contains(item.author, filterConfig.authorKeywords);
+        if (item.author && authorMatches.length) reasons.push(`作者: ${item.author}`);
+
+        const tagMatches = contains(item.tags.join(' '), filterConfig.tagKeywords);
+        if (tagMatches.length) reasons.push('标签' + tagMatches);
+
+        if (item.textLength < filterConfig.minTextLength) {
+            reasons.push(`太少(${item.textLength})`);
+        }
+        if (item.textLength > filterConfig.maxTextLength) {
+            reasons.push(`太多(${item.textLength})`);
+        }
+        if (filterConfig.hideNoDescription && !item.hasValidDescription) {
+            reasons.push('无简介');
+        }
+        return reasons;
+    }
 
     /* ================= 核心逻辑 ================= */
     function run() {
-        // 执行原本的屏蔽逻辑
         elements.forEach(li => {
-            const titleEl = li.querySelector('.gtm-novel-searchpage-result-title');
-            const seriesEl = li.querySelector('.gtm-novel-searchpage-result-series-title');
-            const title = titleEl ? titleEl.textContent.trim() : '';
-            const series = seriesEl ? seriesEl.textContent.trim() : '';
-            const author = getAuthor(li);
-            const tags = Array.from(li.querySelectorAll('a[href*="tags/"], a.gtm-novel-searchpage-result-tag')).map(a => (a.textContent || '').trim());
-            const textLength = getTextLength(li);
-
-            const desc = (() => {
-                for (let b of li.querySelectorAll('.charcoal-text-ellipsis, [data-line-limit]')) {
-                    let t = (b.textContent || '').trim();
-                    if (t.length > 8 && t !== title && t !== series) return t.replace(/[\s\n\r\u3000]+/g, ' ').trim();
-                }
-                return '';
-            })();
-
-            let reasons = [];
-            if (contains(series, config.contentKeywords).length) reasons.push(`系列`+contains(series, config.contentKeywords));
-            if (contains(title, config.contentKeywords).length) reasons.push(`标题`+contains(title, config.contentKeywords));
-            if (contains(desc, config.contentKeywords).length) reasons.push(`简介`+contains(desc, config.contentKeywords));
-            if (reasons.length === 0 && contains(li.textContent || '', config.contentKeywords).length) reasons.push('全文关键词'+contains(li.textContent || '', config.contentKeywords));
-            if (author && contains(author, config.authorKeywords).length) reasons.push(`作者: ${author}`);
-            if (contains(tags.join(' '), config.tagKeywords).length) reasons.push(`标签`+contains(tags.join(' '), config.tagKeywords));
-            if (textLength < config.minTextLength) reasons.push(`太少(${textLength})`);
-            if (textLength > config.maxTextLength) reasons.push(`太多(${textLength})`);
-            if (config.hideNoDescription && !hasValidDesc(li)) reasons.push('无简介');
-
-            const shouldHide = isHidden && reasons.length > 0;
+            const item = readNovelItem(li, config.hideNoDescription);
+            const shouldHide = isHidden && getHideReasons(item, config).length > 0;
             li.classList.toggle('hidden-by-ai-toggle', shouldHide);
         });
     }
