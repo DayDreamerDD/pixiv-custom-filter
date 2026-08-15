@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pixiv小说自定义屏蔽
 // @namespace    http://tampermonkey.net/
-// @version      2026.8.15.2
+// @version      2026.8.15.3
 // @description  自适应移动端与桌面端的小说筛选按钮和设置界面
 // @author       echo
 // @match        https://www.pixiv.net/search*
@@ -318,36 +318,6 @@
         document.body.appendChild(panel);
     }
 
-    /* ================= 广告屏蔽逻辑 (优化版) ================= */
-    function removePremiumAds() {
-        // 1. 删除嵌入的广告 iframe
-        document.querySelectorAll('iframe[src*="premium_lp"]').forEach(iframe => iframe.remove());
-
-        // 2. 精确匹配并删除会员宣传大横幅（匹配跳转链接为 premium/lead/lp 的容器）
-        document.querySelectorAll('a[href*="/premium/lead/lp"]').forEach(link => {
-            const container = link.closest('.mx-auto') || link.closest('.relative') || link.parentElement;
-            if (container) {
-                container.remove();
-            }
-        });
-
-        // 3. 清除其他包含会员推广文案的提示组件（限定范围，防止误删分类导航和筛选条件栏）
-        document.querySelectorAll('aside, div').forEach(el => {
-            if (el.children.length <= 6) {
-                const text = el.textContent || '';
-                if (
-                    (text.includes('成为pixiv高级会员') || text.includes('开通pixiv高级会员')) &&
-                    (text.includes('使用相关功能') || text.includes('使用收藏内搜索')) &&
-                    !el.querySelector('nav') &&
-                    !el.querySelector('button[data-ga4-label]')
-                ) {
-                    const target = el.closest('.mx-auto') || el;
-                    target.remove();
-                }
-            }
-        });
-    }
-
     /* ================= 工具 ================= */
     const contains = (text, keys) => {
         if (!text) return [];
@@ -471,9 +441,6 @@
             const shouldHide = isHidden && reasons.length > 0;
             li.classList.toggle('hidden-by-ai-toggle', shouldHide);
         });
-
-        // 强制移除广告元素
-        removePremiumAds();
     }
 
     function init() {
@@ -622,13 +589,11 @@
     // 持续监控与初始化
     setInterval(() => {
         mountUI();
-        removePremiumAds(); // 每2秒强查一次广告
     }, 2000);
 
     new MutationObserver(() => {
         setTimeout(() => {
             init();
-            removePremiumAds();
         }, 300);
     }).observe(document.body, { childList: true, subtree: true });
 
