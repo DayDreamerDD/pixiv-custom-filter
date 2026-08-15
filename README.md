@@ -1,17 +1,6 @@
-# Pixiv小说自定义关键词屏蔽脚本 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=echo152.pixiv-custom-filter)
+# Pixiv Novel Custom Blocklist Filter User-script
 
-## 提示
-
-部分用户的p站ui推送了更新，可能用不了。由于我这边还是老版本的，我也没办法优化，这个只能等后面再说了。
-我现在已经推送了新的ui，做了下适配，如果还有用老版本的，那就用老版本的代码
-
-
-
-## 前言
-
-pixiv自带的屏蔽太垃圾，一堆污染词条的ai文，屏蔽不过来，于是写了个油猴来屏蔽，一劳永逸了。代码很简单，自己看着配置一下去屏蔽吧。
-
-
+Inspired by Pixiv小说自定义关键词屏蔽脚本 <https://github.com/echo152/pixiv-custom-filter>
 ---
 
 
