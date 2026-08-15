@@ -6,6 +6,7 @@
 // @author       echo
 // @match        https://www.pixiv.net/search*
 // @match        https://www.pixiv.net/tag*
+// @match        https://www.pixiv.net/*/tag*
 // @match        https://www.pixiv.net/novel/bookmarks.php*
 // @grant        GM_addStyle
 // @run-at       document-end
