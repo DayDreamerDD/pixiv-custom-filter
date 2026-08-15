@@ -1,0 +1,9 @@
+# Local agent and development artifacts
+.agents/
+.claude/
+.superpowers/
+docs/
+tests/
+AGENTS.md
+CLAUDE.md
+AGENTS.override.md
