@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Pixiv Custom Filter
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Custom Pixiv filter with compatible UI
 // @author       URARUA
+// @license      MIT
 // @match        https://www.pixiv.net/search*
 // @match        https://www.pixiv.net/tag*
 // @match        https://www.pixiv.net/*/tag*

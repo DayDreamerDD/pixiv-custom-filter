@@ -48,6 +48,10 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 - 字数范围使用 Pixiv 页面显示的字符数或词数直接比较，不在不同单位之间换算；无法识别字数时，不会仅因字数上下限隐藏作品。
 - 启用“隐藏无简介小说”后，没有独立简介的作品会被隐藏；标题或系列名称不会被当作简介。
 
+### 许可
+
+本项目采用 [MIT 许可证](LICENSE) 发布。保留版权和许可声明后，可以自由使用、复制、修改和分发。
+
 ## English
 
 This userscript hides works on Pixiv novel search, tag search, and novel bookmarks pages based on keywords, author, tags, displayed length range, and description availability.
@@ -89,6 +93,10 @@ Two buttons, an eye and a gear, appear on the right side of the page.
 - Length limits compare the character or word count displayed by Pixiv directly without converting between units. If no length can be recognized, length limits alone do not hide the work.
 - When “Hide novels without a description” is enabled, works without an independent description are hidden. A title or series name is not treated as a description.
 
+### License
+
+This project is released under the [MIT License](LICENSE). You may use, copy, modify, and distribute it freely as long as the copyright and license notices are retained.
+
 ## 日本語
 
 Pixiv の小説検索、タグ検索、小説ブックマークページで、キーワード、作者、タグ、文字数範囲、あらすじの有無に基づいて作品を非表示にするユーザースクリプトです。
@@ -129,3 +137,7 @@ Codex 上で動作する GPT 5.6 により開発されています。
 - キーワード照合では大文字と小文字を区別せず、全角・半角文字と連続する空白を正規化します。
 - 文字数範囲は Pixiv に表示された文字数または単語数をそのまま比較し、単位間の換算は行いません。文字数を認識できない場合、文字数の上下限だけを理由に作品を非表示にはしません。
 - 「あらすじのない小説を非表示」を有効にすると、独立したあらすじがない作品を非表示にします。タイトルやシリーズ名はあらすじとして扱いません。
+
+### ライセンス
+
+このプロジェクトは [MIT License](LICENSE) の下で公開されています。著作権表示とライセンス表示を保持する限り、自由に使用、複製、変更、配布できます。
