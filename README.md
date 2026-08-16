@@ -18,7 +18,7 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 ### 安装
 
 1. 在浏览器中安装 [Tampermonkey](https://www.tampermonkey.net/)。
-2. 打开 [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js)。
+2. 打开 [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js)。
 3. 在 Tampermonkey 安装页面确认安装，并确保脚本已启用。
 
 脚本支持以下 Pixiv 页面：
@@ -59,7 +59,7 @@ Powered by GPT 5.6 running in Codex.
 ### Installation
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) in your browser.
-2. Open [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js).
+2. Open [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js).
 3. Confirm the installation on the Tampermonkey page and make sure the userscript is enabled.
 
 The userscript supports these Pixiv pages:
@@ -100,7 +100,7 @@ Codex 上で動作する GPT 5.6 により開発されています。
 ### インストール
 
 1. ブラウザーに [Tampermonkey](https://www.tampermonkey.net/) をインストールします。
-2. [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js) を開きます。
+2. [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js) を開きます。
 3. Tampermonkey のインストール画面で確認し、ユーザースクリプトが有効になっていることを確認します。
 
 このユーザースクリプトは、次の Pixiv ページに対応しています。
