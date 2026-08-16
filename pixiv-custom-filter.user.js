@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
 // @description  Custom Pixiv filter with compatible UI
-// @author       URARUA
+// @author       DayDreamerDD
 // @license      MIT
 // @match        https://www.pixiv.net/search*
 // @match        https://www.pixiv.net/tag*
@@ -12,8 +12,8 @@
 // @match        https://www.pixiv.net/*/users/*/bookmarks/novels*
 // @grant        GM_addStyle
 // @run-at       document-end
-// @downloadURL  https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js
-// @updateURL    https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js
+// @downloadURL  https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js
+// @updateURL    https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js
 // ==/UserScript==
 
 (function () {
