@@ -1,17 +1,18 @@
 // ==UserScript==
-// @name         Pixiv小说自定义屏蔽
+// @name         Pixiv Custom Filter
 // @namespace    http://tampermonkey.net/
-// @version      2026.8.15.3
-// @description  自适应移动端与桌面端的小说筛选按钮和设置界面
-// @author       echo
+// @version      2026.8.16.2
+// @description  Custom Pixiv filter with compatible UI
+// @author       URARUA
 // @match        https://www.pixiv.net/search*
 // @match        https://www.pixiv.net/tag*
 // @match        https://www.pixiv.net/*/tag*
-// @match        https://www.pixiv.net/novel/bookmarks.php*
+// @match        https://www.pixiv.net/users/*/bookmarks/novels*
+// @match        https://www.pixiv.net/*/users/*/bookmarks/novels*
 // @grant        GM_addStyle
 // @run-at       document-end
-// @downloadURL  https://raw.githubusercontent.com/echo152/pixiv-custom-filter/main/pixiv-custom-filter.user.js
-// @updateURL    https://raw.githubusercontent.com/echo152/pixiv-custom-filter/main/pixiv-custom-filter.user.js
+// @downloadURL  https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js
+// @updateURL    https://raw.githubusercontent.com/URARUA/pixiv-custom-filter/main/pixiv-custom-filter.user.js
 // ==/UserScript==
 
 (function () {
@@ -320,96 +321,121 @@
     }
 
     /* ================= 工具 ================= */
-    const contains = (text, keys) => {
-        if (!text) return [];
-        text = text.toLowerCase();
-        return keys.filter(k => k && text.includes(k.toLowerCase()));
+    const normalizeMatchText = value => String(value ?? '')
+        .normalize('NFKC')
+        .replace(/\s+/gu, ' ')
+        .trim()
+        .toLowerCase();
+
+    const cleanText = value => String(value ?? '')
+        .replace(/[\s\u3000]+/gu, ' ')
+        .trim();
+
+    const contains = (source, keys) => {
+        const normalizedSource = normalizeMatchText(source);
+        return keys.filter(key => {
+            const normalizedKey = normalizeMatchText(key);
+            return normalizedKey && normalizedSource.includes(normalizedKey);
+        });
     };
 
+    const novelBookmarksPathPattern = /^\/(?:[^/]+\/)?users\/[^/]+\/bookmarks\/novels(?:\/|$)/u;
+
+    function isNovelBookmarksPage() {
+        return novelBookmarksPathPattern.test(location.pathname);
+    }
+
     function findItems() {
-        return document.querySelectorAll('[data-ga4-label="thumbnail"]');
+        if (!isNovelBookmarksPage()) {
+            return document.querySelectorAll('[data-ga4-label="thumbnail"]');
+        }
+
+        const cards = Array.from(
+            document.querySelectorAll('a[href*="novel/show.php"]'),
+            link => link.closest('li')
+        ).filter(Boolean);
+        return [...new Set(cards)];
     }
 
     /* ================= 作者提取 ================= */
     function getAuthor(li, title, series) {
-        let authorEl = li.querySelector('.gtm-novel-searchpage-result-user');
-        if (authorEl) {
-            const name = (authorEl.textContent || '').trim();
-            if (name && name !== title && name !== series && name.length < 30) return name;
-        }
-
-        authorEl = li.querySelector('a[href^="/users/"]');
-        if (authorEl) {
-            const name = (authorEl.textContent || '').trim();
-            if (name && name !== title && name !== series && name.length < 30) return name;
-        }
-
-        const userLinks = li.querySelectorAll('a[href^="/users/"], a.gtm-novel-searchpage-result-user');
+        const userLinks = li.querySelectorAll('a[href*="/users/"]');
         for (const link of userLinks) {
-            const name = (link.textContent || '').trim();
-            if (name && name.length > 1 && name.length < 25 && name !== title && name !== series) {
-                return name;
-            }
+            const name = cleanText(link.textContent);
+            if (name && name !== title && name !== series) return name;
         }
         return '';
-    }
-
-    /* ================= 简介判断 ================= */
-    function hasValidDesc(li, title, seriesTitle) {
-        const textBlocks = li.querySelectorAll('.charcoal-text-ellipsis, [data-line-limit]');
-        for (const block of textBlocks) {
-            const text = (block.textContent || '').trim();
-            if (!text || text === title || text === seriesTitle || text.startsWith(title)) continue;
-            if (text.length >= 8) return true;
-        }
-        return false;
     }
 
     /*
      * Pixiv 的 CSS module class 会随版本变化，不能用 class 定位字数。
      * 直接识别卡片中的“数字 + 单位”语义文本，避免持续维护 class 名。
      */
-    const textLengthPattern = /^([\d\s,，]+)\s*(?:字|文字|character\(s\))$/iu;
+    const textLengthPattern = /^([\s,，]*\d[\d\s,，]*)\s*(文字|字|単語|个单词|個單詞|個詞彙|character(?:\(s\)|s)?|word(?:\(s\)|s)?)$/iu;
 
     function parseTextLength(value) {
-        const match = String(value || '').normalize('NFKC').trim().match(textLengthPattern);
+        const match = String(value ?? '').normalize('NFKC').trim().match(textLengthPattern);
         if (!match) return null;
 
         const length = Number(match[1].replace(/[\s,，]/g, ''));
-        return Number.isSafeInteger(length) ? length : null;
+        if (!Number.isSafeInteger(length)) return null;
+
+        const unit = /^(?:単語|个单词|個單詞|個詞彙|word)/iu.test(match[2])
+            ? 'words'
+            : 'characters';
+        return { value: length, unit };
     }
 
     function getTextLength(li) {
         const nodes = li.querySelectorAll('*');
         for (const node of nodes) {
             if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') continue;
-            if (node.closest('.charcoal-text-ellipsis')) continue;
+            if (node.closest('.charcoal-text-ellipsis, [data-line-limit]')) continue;
 
             const values = [node.textContent, node.getAttribute('aria-label'), node.getAttribute('title')];
             for (const value of values) {
-                const length = parseTextLength(value);
-                if (length !== null) return length;
+                const displayedLength = parseTextLength(value);
+                if (displayedLength !== null) return displayedLength;
             }
         }
-        return 0;
+        return null;
     }
 
     function getDescription(li, title, series) {
         const blocks = li.querySelectorAll('.charcoal-text-ellipsis, [data-line-limit]');
         for (const block of blocks) {
-            const text = (block.textContent || '').trim();
-            if (text.length > 8 && text !== title && text !== series) {
-                return text.replace(/[\s\n\r\u3000]+/g, ' ').trim();
-            }
+            const text = cleanText(block.textContent);
+            if (text && text !== title && text !== series) return text;
         }
         return '';
     }
 
-    function readNovelItem(li, checkDescriptionValidity = true) {
-        const title = li.querySelector('.gtm-novel-searchpage-result-title')
-            ?.textContent.trim() || '';
-        const series = li.querySelector('.gtm-novel-searchpage-result-series-title')
-            ?.textContent.trim() || '';
+    function getTitle(li) {
+        const searchTitle = cleanText(
+            li.querySelector('.gtm-novel-searchpage-result-title')?.textContent
+        );
+        if (searchTitle) return searchTitle;
+
+        for (const link of li.querySelectorAll('a[href*="novel/show.php"]')) {
+            const title = cleanText(link.textContent);
+            if (title) return title;
+        }
+        return '';
+    }
+
+    function getSeries(li) {
+        return cleanText(
+            li.querySelector('.gtm-novel-searchpage-result-series-title')?.textContent
+        ) || cleanText(
+            li.querySelector('a[href*="/novel/series/"]')?.textContent
+        );
+    }
+
+    function readNovelItem(li) {
+        const title = getTitle(li);
+        const series = getSeries(li);
+        const displayedLength = getTextLength(li);
+        const description = getDescription(li, title, series);
 
         return {
             title,
@@ -418,12 +444,10 @@
             tags: Array.from(li.querySelectorAll(
                 'a[href*="tags/"], a.gtm-novel-searchpage-result-tag'
             )).map(tag => (tag.textContent || '').trim()),
-            textLength: getTextLength(li),
-            description: getDescription(li, title, series),
-            fullText: li.textContent || '',
-            hasValidDescription: checkDescriptionValidity
-                ? hasValidDesc(li, title, series)
-                : true
+            textLength: displayedLength?.value ?? null,
+            textLengthUnit: displayedLength?.unit ?? null,
+            description,
+            hasValidDescription: Boolean(description)
         };
     }
 
@@ -438,22 +462,19 @@
             if (matches.length) reasons.push(label + matches);
         }
 
-        if (reasons.length === 0) {
-            const matches = contains(item.fullText, filterConfig.contentKeywords);
-            if (matches.length) reasons.push('全文关键词' + matches);
-        }
-
         const authorMatches = contains(item.author, filterConfig.authorKeywords);
         if (item.author && authorMatches.length) reasons.push(`作者: ${item.author}`);
 
         const tagMatches = contains(item.tags.join(' '), filterConfig.tagKeywords);
         if (tagMatches.length) reasons.push('标签' + tagMatches);
 
-        if (item.textLength < filterConfig.minTextLength) {
-            reasons.push(`太少(${item.textLength})`);
-        }
-        if (item.textLength > filterConfig.maxTextLength) {
-            reasons.push(`太多(${item.textLength})`);
+        if (item.textLength !== null) {
+            if (item.textLength < filterConfig.minTextLength) {
+                reasons.push(`太少(${item.textLength})`);
+            }
+            if (item.textLength > filterConfig.maxTextLength) {
+                reasons.push(`太多(${item.textLength})`);
+            }
         }
         if (filterConfig.hideNoDescription && !item.hasValidDescription) {
             reasons.push('无简介');
@@ -464,7 +485,7 @@
     /* ================= 核心逻辑 ================= */
     function run() {
         elements.forEach(li => {
-            const item = readNovelItem(li, config.hideNoDescription);
+            const item = readNovelItem(li);
             const shouldHide = isHidden && getHideReasons(item, config).length > 0;
             li.classList.toggle('hidden-by-ai-toggle', shouldHide);
         });
@@ -627,5 +648,5 @@
     mountUI();
     setTimeout(init, 1000);
 
-    console.log('✅ Pixiv小说屏蔽脚本已启动');
+    console.log('Pixiv自定义屏蔽脚本已启动 / Pixiv Custom Filter Script Loaded');
 })();
