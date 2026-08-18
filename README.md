@@ -25,11 +25,11 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 
 脚本支持以下 Pixiv 页面：
 
-~~- 搜索页：`https://www.pixiv.net/search*`~~
-~~- 标签页：`https://www.pixiv.net/tag*`~~
-~~- 设置语言的标签页：`https://www.pixiv.net/*/tag*`~~
-~~- 小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
-~~- 设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- ~~搜索页：`https://www.pixiv.net/search*`~~
+- ~~标签页：`https://www.pixiv.net/tag*`~~
+- ~~设置语言的标签页：`https://www.pixiv.net/*/tag*`~~
+- ~~小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
+- ~~设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
 - 为了使移除推广和广告元素在全站生效，脚本生效页面已修改为：`https://www.pixiv.net/*`
 
 ### 使用
@@ -71,11 +71,11 @@ Powered by GPT 5.6 running in Codex.
 
 The userscript supports these Pixiv pages:
 
-~~- Search pages: `https://www.pixiv.net/search*`~~
-~~- Tag pages: `https://www.pixiv.net/tag*`~~
-~~- Language-prefixed tag pages: `https://www.pixiv.net/*/tag*`~~
-~~- Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`~~
-~~- Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- ~~Search pages: `https://www.pixiv.net/search*`~~
+- ~~Tag pages: `https://www.pixiv.net/tag*`~~
+- ~~Language-prefixed tag pages: `https://www.pixiv.net/*/tag*`~~
+- ~~Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`~~
+- ~~Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
 - To make promotional and advertising element removal work site-wide, the userscript now runs on: `https://www.pixiv.net/*`
 
 ### Usage
@@ -117,11 +117,11 @@ Codex 上で動作する GPT 5.6 により開発されています。
 
 このユーザースクリプトは、次の Pixiv ページに対応しています。
 
-~~- 検索ページ：`https://www.pixiv.net/search*`~~
-~~- タグページ：`https://www.pixiv.net/tag*`~~
-~~- 言語指定のタグページ：`https://www.pixiv.net/*/tag*`~~
-~~- 小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
-~~- 言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- ~~検索ページ：`https://www.pixiv.net/search*`~~
+- ~~タグページ：`https://www.pixiv.net/tag*`~~
+- ~~言語指定のタグページ：`https://www.pixiv.net/*/tag*`~~
+- ~~小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
+- ~~言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
 - プロモーション要素や広告要素の削除をサイト全体で有効にするため、スクリプトの適用範囲を次のように変更しました：`https://www.pixiv.net/*`
 
 ### 使い方
