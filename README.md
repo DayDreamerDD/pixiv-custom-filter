@@ -11,6 +11,8 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 
 用于在 Pixiv 小说搜索、标签搜索和小说收藏页面中，按关键词、作者、标签、字数范围及简介状态隐藏作品。
 
+自动移除 Pixiv 页面中的部分推广和广告元素。
+
 项目重写自 [Pixiv 小说自定义关键词屏蔽脚本](https://github.com/echo152/pixiv-custom-filter)。
 
 由运行在 Codex 的 GPT 5.6 驱动。
@@ -23,13 +25,12 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 
 脚本支持以下 Pixiv 页面：
 
-- 搜索页：`https://www.pixiv.net/search*`
-- 标签页：`https://www.pixiv.net/tag*`
-- 设置语言的标签页：`https://www.pixiv.net/*/tag*`
-- 小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`
-- 设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`
-
-旧版小说收藏页 `https://www.pixiv.net/novel/bookmarks.php*` 已停止支持。
+~~- 搜索页：`https://www.pixiv.net/search*`~~
+~~- 标签页：`https://www.pixiv.net/tag*`~~
+~~- 设置语言的标签页：`https://www.pixiv.net/*/tag*`~~
+~~- 小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
+~~- 设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- 为了使移除推广和广告元素在全站生效，脚本生效页面已修改为：`https://www.pixiv.net/*`
 
 ### 使用
 
@@ -56,6 +57,8 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 
 This userscript hides works on Pixiv novel search, tag search, and novel bookmarks pages based on keywords, author, tags, displayed length range, and description availability.
 
+Automatically removes selected promotional and advertising elements from Pixiv pages.
+
 Rewritten from [Pixiv Novel Custom Keyword Filter](https://github.com/echo152/pixiv-custom-filter).
 
 Powered by GPT 5.6 running in Codex.
@@ -68,13 +71,12 @@ Powered by GPT 5.6 running in Codex.
 
 The userscript supports these Pixiv pages:
 
-- Search pages: `https://www.pixiv.net/search*`
-- Tag pages: `https://www.pixiv.net/tag*`
-- Language-prefixed tag pages: `https://www.pixiv.net/*/tag*`
-- Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`
-- Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`
-
-The legacy novel bookmarks page `https://www.pixiv.net/novel/bookmarks.php*` is no longer supported.
+~~- Search pages: `https://www.pixiv.net/search*`~~
+~~- Tag pages: `https://www.pixiv.net/tag*`~~
+~~- Language-prefixed tag pages: `https://www.pixiv.net/*/tag*`~~
+~~- Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`~~
+~~- Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- To make promotional and advertising element removal work site-wide, the userscript now runs on: `https://www.pixiv.net/*`
 
 ### Usage
 
@@ -101,6 +103,8 @@ This project is released under the [MIT License](LICENSE). You may use, copy, mo
 
 Pixiv の小説検索、タグ検索、小説ブックマークページで、キーワード、作者、タグ、文字数範囲、あらすじの有無に基づいて作品を非表示にするユーザースクリプトです。
 
+Pixiv ページ上の一部のプロモーション要素や広告要素を自動的に削除します。
+
 [Pixiv 小説カスタムキーワードフィルタースクリプト](https://github.com/echo152/pixiv-custom-filter)を基に全面的に書き直しています。
 
 Codex 上で動作する GPT 5.6 により開発されています。
@@ -113,13 +117,12 @@ Codex 上で動作する GPT 5.6 により開発されています。
 
 このユーザースクリプトは、次の Pixiv ページに対応しています。
 
-- 検索ページ：`https://www.pixiv.net/search*`
-- タグページ：`https://www.pixiv.net/tag*`
-- 言語指定のタグページ：`https://www.pixiv.net/*/tag*`
-- 小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`
-- 言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`
-
-旧形式の小説ブックマークページ `https://www.pixiv.net/novel/bookmarks.php*` はサポートされません。
+~~- 検索ページ：`https://www.pixiv.net/search*`~~
+~~- タグページ：`https://www.pixiv.net/tag*`~~
+~~- 言語指定のタグページ：`https://www.pixiv.net/*/tag*`~~
+~~- 小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
+~~- 言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
+- プロモーション要素や広告要素の削除をサイト全体で有効にするため、スクリプトの適用範囲を次のように変更しました：`https://www.pixiv.net/*`
 
 ### 使い方
 

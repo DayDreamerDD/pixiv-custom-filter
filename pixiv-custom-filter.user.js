@@ -1,15 +1,11 @@
 // ==UserScript==
 // @name         Pixiv Custom Filter
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Custom Pixiv filter with compatible UI
 // @author       DayDreamerDD
 // @license      MIT
-// @match        https://www.pixiv.net/search*
-// @match        https://www.pixiv.net/tag*
-// @match        https://www.pixiv.net/*/tag*
-// @match        https://www.pixiv.net/users/*/bookmarks/novels*
-// @match        https://www.pixiv.net/*/users/*/bookmarks/novels*
+// @match        https://www.pixiv.net/*
 // @grant        GM_addStyle
 // @run-at       document-end
 // @downloadURL  https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js
@@ -322,6 +318,40 @@
     }
 
     /* ================= 工具 ================= */
+    function removeTargetElements() {
+        document.querySelectorAll('iframe[src*="premium_lp"]').forEach(iframe => iframe.remove());
+
+        document.querySelectorAll('a[href*="/premium/lead/lp"]').forEach(link => {
+            const container = link.closest('.mx-auto')
+                || link.closest('.relative')
+                || link.parentElement;
+            if (container) container.remove();
+        });
+
+        document.querySelectorAll('div.overflow-hidden.col-span-full').forEach(div => div.remove());
+
+        document.querySelectorAll('button span').forEach(span => {
+            const backgroundImage = getComputedStyle(span).backgroundImage || '';
+            if (!/\/premium.*\.png/i.test(backgroundImage)) return;
+
+            const button = span.closest('button');
+            if (button) button.remove();
+        });
+
+        document.querySelectorAll('li a').forEach(link => {
+            const backgroundImage = getComputedStyle(link, '::after').backgroundImage || '';
+            if (!/\/premium.*\.png/i.test(backgroundImage)) return;
+
+            const listItem = link.closest('li');
+            if (listItem) listItem.remove();
+        });
+
+        document.querySelectorAll('iframe[style*="overflow: hidden"]').forEach(iframe => {
+            const container = iframe.closest('div');
+            if (container) container.remove();
+        });
+    }
+
     const normalizeMatchText = value => String(value ?? '')
         .normalize('NFKC')
         .replace(/\s+/gu, ' ')
@@ -638,16 +668,21 @@
     // 持续监控与初始化
     setInterval(() => {
         mountUI();
+        removeTargetElements();
     }, 2000);
 
     new MutationObserver(() => {
         setTimeout(() => {
             init();
+            removeTargetElements();
         }, 300);
     }).observe(document.body, { childList: true, subtree: true });
 
     mountUI();
-    setTimeout(init, 1000);
+    setTimeout(() => {
+        init();
+        removeTargetElements();
+    }, 1000);
 
     console.log('Pixiv自定义屏蔽脚本已启动 / Pixiv Custom Filter Script Loaded');
 })();
