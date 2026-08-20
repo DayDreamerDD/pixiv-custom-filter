@@ -34,7 +34,7 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 
 ### 使用
 
-页面右侧显示眼睛和齿轮两个按钮。
+仅在上述搜索页、标签页和小说收藏页，页面右侧会显示眼睛和齿轮两个按钮；其他 Pixiv 页面不显示控件，但仍会移除指定的推广和广告元素。
 
 - 眼睛按钮用于启用或停用屏蔽。蓝色睁眼状态表示屏蔽已启用；灰色闭眼状态表示屏蔽未启用。
 - 齿轮按钮用于打开设置。移动端显示全屏设置页；桌面端在按钮左侧显示固定宽度的设置面板。
@@ -80,7 +80,7 @@ The userscript supports these Pixiv pages:
 
 ### Usage
 
-Two buttons, an eye and a gear, appear on the right side of the page.
+On the search, tag, and novel bookmarks pages listed above, an eye and a gear appear on the right. Other Pixiv pages hide these controls while still removing the selected promotional and advertising elements.
 
 - Use the eye button to enable or disable filtering. A blue open eye means filtering is enabled; a gray closed eye means it is disabled.
 - Use the gear button to open settings. On mobile, settings fill the screen. On desktop, a fixed-width panel opens to the left of the buttons.
@@ -126,7 +126,7 @@ Codex 上で動作する GPT 5.6 により開発されています。
 
 ### 使い方
 
-ページ右側に、目と歯車の2つのボタンが表示されます。
+上記の検索、タグ、小説ブックマークページでのみ、ページ右側に目と歯車の2つのボタンが表示されます。その他の Pixiv ページではボタンを非表示にし、指定されたプロモーション要素や広告要素の削除だけを継続します。
 
 - 目のボタンでフィルターを有効または無効にします。青い開いた目は有効、灰色の閉じた目は無効を表します。
 - 歯車のボタンで設定を開きます。モバイルでは設定が全画面で表示され、デスクトップではボタンの左側に固定幅のパネルが表示されます。

@@ -54,6 +54,7 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 24px rgba(20, 29, 43, 0.22);
         }
+        #pixivFilterControls[hidden] { display: none !important; }
         #pixivFilterControls button,
         #pixivConfigPanel button,
         #pixivConfigPanel input,
@@ -310,11 +311,17 @@
 </footer>`;
 
     function mountUI() {
-        if (!document.body || document.getElementById('pixivFilterControls')) return;
-        controls.appendChild(btn);
-        controls.appendChild(cfgBtn);
-        document.body.appendChild(controls);
-        document.body.appendChild(panel);
+        if (!document.body) return;
+        if (!document.getElementById('pixivFilterControls')) {
+            if (!controls.children.length) {
+                controls.appendChild(btn);
+                controls.appendChild(cfgBtn);
+            }
+            document.body.appendChild(controls);
+        }
+        if (!document.getElementById('pixivConfigPanel')) {
+            document.body.appendChild(panel);
+        }
     }
 
     /* ================= 工具 ================= */
@@ -371,6 +378,15 @@
     };
 
     const novelBookmarksPathPattern = /^\/(?:[^/]+\/)?users\/[^/]+\/bookmarks\/novels(?:\/|$)/u;
+    const filteringPathPatterns = [
+        /^\/search(?:\.php$|\/|$)/u,
+        /^\/(?:[^/]+\/)?tag(?:\/|$)/u,
+        novelBookmarksPathPattern
+    ];
+
+    function isFilteringPage() {
+        return filteringPathPatterns.some(pattern => pattern.test(location.pathname));
+    }
 
     function isNovelBookmarksPage() {
         return novelBookmarksPathPattern.test(location.pathname);
@@ -514,7 +530,16 @@
     }
 
     /* ================= 核心逻辑 ================= */
+    function clearFilteredElements() {
+        elements.forEach(li => li.classList.remove('hidden-by-ai-toggle'));
+        elements = [];
+    }
+
     function run() {
+        if (!isFilteringPage()) {
+            clearFilteredElements();
+            return;
+        }
         elements.forEach(li => {
             const item = readNovelItem(li);
             const shouldHide = isHidden && getHideReasons(item, config).length > 0;
@@ -523,6 +548,10 @@
     }
 
     function init() {
+        if (!isFilteringPage()) {
+            clearFilteredElements();
+            return;
+        }
         elements = Array.from(findItems());
         run();
     }
@@ -595,7 +624,7 @@
         panel.querySelector('#settingsError').textContent = '';
     }
 
-    function setSettingsOpen(open) {
+    function setSettingsOpen(open, restoreFocus = true) {
         if (open) {
             syncTranslations();
             syncSettingsForm();
@@ -607,9 +636,33 @@
 
         if (open) {
             requestAnimationFrame(() => panel.querySelector('#c').focus());
-        } else {
+        } else if (restoreFocus) {
             cfgBtn.focus();
         }
+    }
+
+    function syncFilteringAvailability() {
+        mountUI();
+        const available = isFilteringPage();
+        controls.hidden = !available;
+        if (!available) {
+            setSettingsOpen(false, false);
+            clearFilteredElements();
+            return;
+        }
+        init();
+    }
+
+    function observeRouteChanges() {
+        for (const methodName of ['pushState', 'replaceState']) {
+            const original = history[methodName];
+            history[methodName] = function (...args) {
+                const result = original.apply(this, args);
+                syncFilteringAvailability();
+                return result;
+            };
+        }
+        window.addEventListener('popstate', syncFilteringAvailability);
     }
 
     function readLengthBounds() {
@@ -666,21 +719,24 @@
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
     // 持续监控与初始化
+    observeRouteChanges();
     setInterval(() => {
         mountUI();
+        syncFilteringAvailability();
         removeTargetElements();
     }, 2000);
 
     new MutationObserver(() => {
         setTimeout(() => {
-            init();
+            syncFilteringAvailability();
             removeTargetElements();
         }, 300);
     }).observe(document.body, { childList: true, subtree: true });
 
     mountUI();
+    syncFilteringAvailability();
     setTimeout(() => {
-        init();
+        syncFilteringAvailability();
         removeTargetElements();
     }, 1000);
 
