@@ -23,14 +23,15 @@ description: Install and use Pixiv Custom Filter in Simplified Chinese, English,
 2. 打开 [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js)。
 3. 在 Tampermonkey 安装页面确认安装，并确保脚本已启用。
 
-脚本支持以下 Pixiv 页面：
+脚本仅在以下 Pixiv 页面启用作品筛选和控制面板：
 
-- ~~搜索页：`https://www.pixiv.net/search*`~~
-- ~~标签页：`https://www.pixiv.net/tag*`~~
-- ~~设置语言的标签页：`https://www.pixiv.net/*/tag*`~~
-- ~~小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
-- ~~设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
-- 为了使移除推广和广告元素在全站生效，脚本生效页面已修改为：`https://www.pixiv.net/*`
+- 搜索页：`https://www.pixiv.net/search*`
+- 标签页：`https://www.pixiv.net/tags/*`
+- 设置语言的标签页：`https://www.pixiv.net/*/tags/*`
+- 小说收藏页：`https://www.pixiv.net/users/*/bookmarks/novels*`
+- 设置语言的小说收藏页：`https://www.pixiv.net/*/users/*/bookmarks/novels*`
+
+**为了在全站移除指定的推广和广告元素，脚本本身会在所有 Pixiv 页面运行：`https://www.pixiv.net/*`。在上述筛选页面以外，控制面板和作品筛选保持停用。**
 
 ### 使用
 
@@ -69,14 +70,15 @@ Powered by GPT 5.6 running in Codex.
 2. Open [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js).
 3. Confirm the installation on the Tampermonkey page and make sure the userscript is enabled.
 
-The userscript supports these Pixiv pages:
+The userscript enables work filtering and its controls only on these Pixiv pages:
 
-- ~~Search pages: `https://www.pixiv.net/search*`~~
-- ~~Tag pages: `https://www.pixiv.net/tag*`~~
-- ~~Language-prefixed tag pages: `https://www.pixiv.net/*/tag*`~~
-- ~~Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`~~
-- ~~Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
-- To make promotional and advertising element removal work site-wide, the userscript now runs on: `https://www.pixiv.net/*`
+- Search pages: `https://www.pixiv.net/search*`
+- Tag pages: `https://www.pixiv.net/tags/*`
+- Language-prefixed tag pages: `https://www.pixiv.net/*/tags/*`
+- Novel bookmarks pages: `https://www.pixiv.net/users/*/bookmarks/novels*`
+- Language-prefixed novel bookmarks pages: `https://www.pixiv.net/*/users/*/bookmarks/novels*`
+
+**To remove selected promotional and advertising elements site-wide, the userscript itself runs on every Pixiv page: `https://www.pixiv.net/*`. Outside the filtering pages listed above, the controls and work filtering remain disabled.**
 
 ### Usage
 
@@ -115,14 +117,15 @@ Codex 上で動作する GPT 5.6 により開発されています。
 2. [pixiv-custom-filter.user.js](https://raw.githubusercontent.com/DayDreamerDD/pixiv-custom-filter/main/pixiv-custom-filter.user.js) を開きます。
 3. Tampermonkey のインストール画面で確認し、ユーザースクリプトが有効になっていることを確認します。
 
-このユーザースクリプトは、次の Pixiv ページに対応しています。
+このユーザースクリプトは、次の Pixiv ページでのみ作品フィルターと操作ボタンを有効にします。
 
-- ~~検索ページ：`https://www.pixiv.net/search*`~~
-- ~~タグページ：`https://www.pixiv.net/tag*`~~
-- ~~言語指定のタグページ：`https://www.pixiv.net/*/tag*`~~
-- ~~小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`~~
-- ~~言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`~~
-- プロモーション要素や広告要素の削除をサイト全体で有効にするため、スクリプトの適用範囲を次のように変更しました：`https://www.pixiv.net/*`
+- 検索ページ：`https://www.pixiv.net/search*`
+- タグページ：`https://www.pixiv.net/tags/*`
+- 言語指定のタグページ：`https://www.pixiv.net/*/tags/*`
+- 小説ブックマークページ：`https://www.pixiv.net/users/*/bookmarks/novels*`
+- 言語指定の小説ブックマークページ：`https://www.pixiv.net/*/users/*/bookmarks/novels*`
+
+**指定したプロモーション要素や広告要素をサイト全体で削除するため、ユーザースクリプト自体はすべての Pixiv ページで動作します：`https://www.pixiv.net/*`。上記以外のページでは、操作ボタンと作品フィルターは無効のままです。**
 
 ### 使い方
 

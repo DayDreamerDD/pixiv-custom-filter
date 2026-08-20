@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pixiv Custom Filter
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Custom Pixiv filter with compatible UI
 // @author       DayDreamerDD
 // @license      MIT
@@ -331,8 +331,8 @@
         document.querySelectorAll('a[href*="/premium/lead/lp"]').forEach(link => {
             const container = link.closest('.mx-auto')
                 || link.closest('.relative')
-                || link.parentElement;
-            if (container) container.remove();
+                || link;
+            container.remove();
         });
 
         document.querySelectorAll('div.overflow-hidden.col-span-full').forEach(div => div.remove());
@@ -380,7 +380,7 @@
     const novelBookmarksPathPattern = /^\/(?:[^/]+\/)?users\/[^/]+\/bookmarks\/novels(?:\/|$)/u;
     const filteringPathPatterns = [
         /^\/search(?:\.php$|\/|$)/u,
-        /^\/(?:[^/]+\/)?tag(?:\/|$)/u,
+        /^\/(?:[^/]+\/)?tags(?:\/|$)/u,
         novelBookmarksPathPattern
     ];
 

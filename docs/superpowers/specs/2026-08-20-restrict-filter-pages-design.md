@@ -3,7 +3,7 @@ type: decision
 description: Approved design for limiting novel filtering and its controls to the former supported Pixiv URLs.
 status: active
 archived: false
-work_status: planned
+work_status: completed
 timestamp: 2026-08-20
 tags:
   - userscript
@@ -29,8 +29,8 @@ A single predicate owns filtering-page recognition. It matches the pathname
 forms represented by the former userscript URL patterns:
 
 - `/search*`;
-- `/tag*`;
-- `/<language-or-prefix>/tag*`;
+- `/tags/*`;
+- `/<language-or-prefix>/tags/*`;
 - `/users/<user>/bookmarks/novels*`;
 - `/<language-or-prefix>/users/<user>/bookmarks/novels*`.
 
