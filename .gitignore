@@ -2,6 +2,7 @@
 .agents/
 .claude/
 .superpowers/
+.worktrees/
 docs/
 tests/
 AGENTS.md
